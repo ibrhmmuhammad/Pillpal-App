@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MedicationForm } from './MedicationForm';
 import { MedicationList } from './MedicationList';
 import { MedicationTaken } from './MedicationTaken';
+import { FloatingAIButton } from '@/components/ai/FloatingAIButton';
 import { useAuth } from '@/hooks/useAuth';
 import { Plus, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
@@ -104,6 +105,8 @@ export const MedicationDashboard = () => {
           </Tabs>
         )}
       </main>
+      
+      <FloatingAIButton />
     </div>
   );
 };
