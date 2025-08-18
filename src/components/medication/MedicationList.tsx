@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Clock, Pill } from 'lucide-react';
+import { Pencil, Trash2, Clock, Pill, Check } from 'lucide-react';
 
 interface Medication {
   id: string;
@@ -18,9 +18,10 @@ interface Medication {
 interface MedicationListProps {
   onEdit: (medication: Medication) => void;
   refresh: boolean;
+  onRefreshTaken?: () => void;
 }
 
-export const MedicationList = ({ onEdit, refresh }: MedicationListProps) => {
+export const MedicationList = ({ onEdit, refresh, onRefreshTaken }: MedicationListProps) => {
   const [medications, setMedications] = useState<Medication[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -75,6 +76,33 @@ export const MedicationList = ({ onEdit, refresh }: MedicationListProps) => {
     });
   };
 
+  const handleMarkAsTaken = async (medication: Medication) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('You must be logged in');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('medication_taken')
+        .insert({
+          medication_schedule_id: medication.id,
+          user_id: user.id,
+          taken_at: new Date().toISOString()
+        });
+
+      if (error) {
+        toast.error('Failed to mark medication as taken');
+      } else {
+        toast.success('Medication marked as taken!');
+        onRefreshTaken?.();
+      }
+    } catch (error) {
+      toast.error('An unexpected error occurred');
+    }
+  };
+
   const getIterationLabel = (iteration: string) => {
     switch (iteration) {
       case 'once': return 'Once daily';
@@ -110,6 +138,13 @@ export const MedicationList = ({ onEdit, refresh }: MedicationListProps) => {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">{medication.medication_name}</CardTitle>
                 <div className="flex gap-2">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => handleMarkAsTaken(medication)}
+                  >
+                    <Check className="h-4 w-4" />
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"

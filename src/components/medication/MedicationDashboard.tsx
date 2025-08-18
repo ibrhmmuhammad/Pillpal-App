@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MedicationForm } from './MedicationForm';
 import { MedicationList } from './MedicationList';
+import { MedicationTaken } from './MedicationTaken';
 import { useAuth } from '@/hooks/useAuth';
 import { Plus, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
@@ -18,12 +20,17 @@ export const MedicationDashboard = () => {
   const [showForm, setShowForm] = useState(false);
   const [editData, setEditData] = useState<Medication | null>(null);
   const [refreshList, setRefreshList] = useState(false);
+  const [refreshTaken, setRefreshTaken] = useState(false);
   const { signOut } = useAuth();
 
   const handleFormSuccess = () => {
     setShowForm(false);
     setEditData(null);
     setRefreshList(!refreshList);
+  };
+
+  const handleRefreshTaken = () => {
+    setRefreshTaken(!refreshTaken);
   };
 
   const handleEdit = (medication: Medication) => {
@@ -77,10 +84,24 @@ export const MedicationDashboard = () => {
             onCancel={handleCancel}
           />
         ) : (
-          <MedicationList 
-            onEdit={handleEdit}
-            refresh={refreshList}
-          />
+          <Tabs defaultValue="schedule" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="schedule">Schedule</TabsTrigger>
+              <TabsTrigger value="taken">Taken</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="schedule" className="mt-6">
+              <MedicationList 
+                onEdit={handleEdit}
+                refresh={refreshList}
+                onRefreshTaken={handleRefreshTaken}
+              />
+            </TabsContent>
+            
+            <TabsContent value="taken" className="mt-6">
+              <MedicationTaken refresh={refreshTaken} />
+            </TabsContent>
+          </Tabs>
         )}
       </main>
     </div>

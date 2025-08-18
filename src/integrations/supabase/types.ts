@@ -47,6 +47,41 @@ export type Database = {
         }
         Relationships: []
       }
+      medication_taken: {
+        Row: {
+          created_at: string
+          id: string
+          medication_schedule_id: string
+          notes: string | null
+          taken_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          medication_schedule_id: string
+          notes?: string | null
+          taken_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          medication_schedule_id?: string
+          notes?: string | null
+          taken_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medication_taken_medication_schedule_id_fkey"
+            columns: ["medication_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "medication_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
