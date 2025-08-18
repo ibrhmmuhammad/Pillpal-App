@@ -1,12 +1,25 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MedicationForm } from './MedicationForm';
-import { MedicationList } from './MedicationList';
+import { 
+  IonContent, 
+  IonHeader, 
+  IonPage, 
+  IonTitle, 
+  IonToolbar,
+  IonButton,
+  IonButtons,
+  IonIcon,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+  IonFab,
+  IonFabButton
+} from '@ionic/react';
+import { IonicMedicationForm } from './IonicMedicationForm';
+import { IonicMedicationList } from './IonicMedicationList';
 import { MedicationTaken } from './MedicationTaken';
 import { FloatingAIButton } from '@/components/ai/FloatingAIButton';
 import { useAuth } from '@/hooks/useAuth';
-import { Plus, LogOut } from 'lucide-react';
+import { add, logOut } from 'ionicons/icons';
 import { toast } from 'sonner';
 
 interface Medication {
@@ -22,6 +35,7 @@ export const MedicationDashboard = () => {
   const [editData, setEditData] = useState<Medication | null>(null);
   const [refreshList, setRefreshList] = useState(false);
   const [refreshTaken, setRefreshTaken] = useState(false);
+  const [selectedSegment, setSelectedSegment] = useState('schedule');
   const { signOut } = useAuth();
 
   const handleFormSuccess = () => {
@@ -52,61 +66,73 @@ export const MedicationDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="text-3xl font-bold">PillPal Pro</h1>
-          <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
-        </div>
-      </header>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>PillPal Pro</IonTitle>
+          <IonButtons slot="end">
+            <IonButton fill="outline" onClick={handleSignOut}>
+              <IonIcon icon={logOut} slot="start" />
+              Sign Out
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
       
-      <main className="max-w-4xl mx-auto p-4 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold">Medication Tracker</h2>
-            <p className="text-muted-foreground">Manage your daily medication schedule</p>
+      <IonContent className="ion-padding">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-semibold">Medication Tracker</h2>
+              <p className="text-muted-foreground">Manage your daily medication schedule</p>
+            </div>
           </div>
-          
-          {!showForm && (
-            <Button onClick={() => setShowForm(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Medication
-            </Button>
+
+          {showForm ? (
+            <IonicMedicationForm 
+              onSuccess={handleFormSuccess}
+              editData={editData}
+              onCancel={handleCancel}
+            />
+          ) : (
+            <>
+              <IonSegment 
+                value={selectedSegment} 
+                onIonChange={e => setSelectedSegment(e.detail.value as string)}
+              >
+                <IonSegmentButton value="schedule">
+                  <IonLabel>Schedule</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="taken">
+                  <IonLabel>Taken</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
+              
+              {selectedSegment === 'schedule' && (
+                <IonicMedicationList 
+                  onEdit={handleEdit}
+                  refresh={refreshList}
+                  onRefreshTaken={handleRefreshTaken}
+                />
+              )}
+              
+              {selectedSegment === 'taken' && (
+                <MedicationTaken refresh={refreshTaken} />
+              )}
+            </>
           )}
         </div>
-
-        {showForm ? (
-          <MedicationForm 
-            onSuccess={handleFormSuccess}
-            editData={editData}
-            onCancel={handleCancel}
-          />
-        ) : (
-          <Tabs defaultValue="schedule" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="schedule">Schedule</TabsTrigger>
-              <TabsTrigger value="taken">Taken</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="schedule" className="mt-6">
-              <MedicationList 
-                onEdit={handleEdit}
-                refresh={refreshList}
-                onRefreshTaken={handleRefreshTaken}
-              />
-            </TabsContent>
-            
-            <TabsContent value="taken" className="mt-6">
-              <MedicationTaken refresh={refreshTaken} />
-            </TabsContent>
-          </Tabs>
+        
+        {!showForm && (
+          <IonFab vertical="bottom" horizontal="end" slot="fixed">
+            <IonFabButton onClick={() => setShowForm(true)}>
+              <IonIcon icon={add} />
+            </IonFabButton>
+          </IonFab>
         )}
-      </main>
-      
-      <FloatingAIButton />
-    </div>
+        
+        <FloatingAIButton />
+      </IonContent>
+    </IonPage>
   );
 };
