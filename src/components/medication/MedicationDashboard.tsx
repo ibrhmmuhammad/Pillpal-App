@@ -19,7 +19,7 @@ import { IonicMedicationList } from './IonicMedicationList';
 import { MedicationTaken } from './MedicationTaken';
 import { FloatingAIButton } from '@/components/ai/FloatingAIButton';
 import { useAuth } from '@/hooks/useAuth';
-import { add, logOut } from 'ionicons/icons';
+import { add, logOut, timeOutline } from 'ionicons/icons';
 import { toast } from 'sonner';
 
 interface Medication {
@@ -71,6 +71,10 @@ export const MedicationDashboard = () => {
         <IonToolbar>
           <IonTitle>PillPal Pro</IonTitle>
           <IonButtons slot="end">
+            <IonButton routerLink="/history" fill="outline" color="secondary">
+              <IonIcon icon={timeOutline} slot="start" />
+              History
+            </IonButton>
             <IonButton fill="outline" onClick={handleSignOut}>
               <IonIcon icon={logOut} slot="start" />
               Sign Out

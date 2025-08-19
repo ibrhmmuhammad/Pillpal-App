@@ -7,6 +7,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { Route } from 'react-router-dom';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import MedicationHistory from "./pages/MedicationHistory";
 
 setupIonicReact();
 
@@ -20,8 +21,9 @@ const App = () => (
         <Sonner />
         <IonReactRouter>
           <IonRouterOutlet>
-            <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
+            <Route exact path="/" component={Index} />
+            <Route path="/history" component={MedicationHistory} />
+            <Route component={NotFound} />
           </IonRouterOutlet>
         </IonReactRouter>
       </TooltipProvider>
