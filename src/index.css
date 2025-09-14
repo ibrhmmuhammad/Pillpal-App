@@ -118,4 +118,30 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Mobile-first touch interactions */
+  button, input, select, textarea {
+    @apply touch-manipulation;
+  }
+
+  /* Ensure interactive elements are large enough for touch */
+  button, input, select {
+    min-height: 44px; /* iOS recommended minimum touch target */
+  }
+
+  /* Improve focus visibility on mobile */
+  input:focus, button:focus, select:focus, textarea:focus {
+    @apply outline-none ring-2 ring-primary ring-offset-2;
+  }
+
+  /* Better mobile viewport handling */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Smooth scrolling for mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
 }

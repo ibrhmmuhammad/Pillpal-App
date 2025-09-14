@@ -58,13 +58,13 @@ export const AuthForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
+    <div className="min-h-screen flex items-center justify-center p-4 pt-safe-top pb-safe-bottom px-safe-left pr-safe-right">
+      <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-card/95 backdrop-blur-sm">
+        <CardHeader className="text-center space-y-3 pb-6">
+          <CardTitle className="text-2xl sm:text-3xl font-bold tracking-tight">
             {isForgotPassword ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Create Account')}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm sm:text-base text-muted-foreground leading-relaxed">
             {isForgotPassword 
               ? 'Enter your email to receive a password reset link'
               : (isLogin 
@@ -74,11 +74,11 @@ export const AuthForm = () => {
             }
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="px-6 pb-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && !isForgotPassword && (
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+              <div className="space-y-3">
+                <Label htmlFor="name" className="text-sm font-medium text-foreground">Full Name</Label>
                 <Input
                   id="name"
                   type="text"
@@ -86,12 +86,13 @@ export const AuthForm = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required={!isLogin}
+                  className="h-12 text-base sm:text-sm px-4 bg-background border-input hover:border-ring transition-colors"
                 />
               </div>
             )}
             
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-3">
+              <Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -99,12 +100,13 @@ export const AuthForm = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="h-12 text-base sm:text-sm px-4 bg-background border-input hover:border-ring transition-colors"
               />
             </div>
             
             {!isForgotPassword && (
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+              <div className="space-y-3">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -114,19 +116,20 @@ export const AuthForm = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="pr-10"
+                    className="h-12 text-base sm:text-sm px-4 pr-12 bg-background border-input hover:border-ring transition-colors"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    className="absolute right-1 top-1 h-10 w-10 p-0 hover:bg-muted/50 rounded-md transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff className="h-5 w-5 text-muted-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <Eye className="h-5 w-5 text-muted-foreground" />
                     )}
                   </Button>
                 </div>
@@ -134,30 +137,34 @@ export const AuthForm = () => {
             )}
 
             {isLogin && !isForgotPassword && (
-              <div className="text-right">
+              <div className="text-right pt-1">
                 <Button
                   type="button"
                   variant="link"
                   size="sm"
                   onClick={() => setIsForgotPassword(true)}
-                  className="text-sm px-0"
+                  className="text-sm px-0 h-auto font-medium text-primary hover:text-primary/80 transition-colors"
                 >
                   Forgot password?
                 </Button>
               </div>
             )}
             
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 transition-all duration-200 active:scale-95" 
+              disabled={loading}
+            >
               {loading ? 'Please wait...' : (isForgotPassword ? 'Send Reset Email' : (isLogin ? 'Sign In' : 'Sign Up'))}
             </Button>
           </form>
           
-          <div className="mt-4 text-center">
+          <div className="mt-6 text-center">
             {isForgotPassword ? (
               <Button 
                 variant="link" 
                 onClick={() => setIsForgotPassword(false)}
-                className="text-sm"
+                className="text-sm h-auto p-2 font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 Back to sign in
               </Button>
@@ -165,7 +172,7 @@ export const AuthForm = () => {
               <Button 
                 variant="link" 
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-sm"
+                className="text-sm h-auto p-2 font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 {isLogin 
                   ? "Don't have an account? Sign up" 
