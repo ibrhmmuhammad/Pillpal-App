@@ -8,6 +8,7 @@ import { Route } from 'react-router-dom';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import MedicationHistory from "./pages/MedicationHistory";
+import ResetPassword from "./pages/ResetPassword";
 
 setupIonicReact();
 
@@ -23,6 +24,7 @@ const App = () => (
           <IonRouterOutlet>
             <Route exact path="/" component={Index} />
             <Route path="/history" component={MedicationHistory} />
+            <Route path="/reset-password" component={ResetPassword} />
             <Route component={NotFound} />
           </IonRouterOutlet>
         </IonReactRouter>
